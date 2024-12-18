@@ -22,7 +22,7 @@ t_client *clients = NULL;
 
 int sockfd, connfd, len , g_id = 0;
 fd_set sockets,  fd_read, fd_write;
-char msg[42 * 4096],  buff[42 * 4096 +42];
+char msg[3* 42 * 4096],  buff[3* 42 * 4096 +42];
 
 
 void fatal()
@@ -69,7 +69,7 @@ void send_all(int fd)
 
 void extract_message(int fd)
 {
-	char	tmp[42 * 4096];
+	char	tmp[3 * 42 * 4096];
 	int	i = 0, j = 0;
 
 	bzero(tmp, sizeof(tmp));
@@ -137,7 +137,6 @@ void add_client()
 	if (connfd < 0) { 
 		fatal();
 	}
-	send_all(connfd);
 	bzero(&buff, sizeof(buff));
 	sprintf(buff, "server: client %d just arrived\n", g_id);
 	FD_SET(connfd, &sockets);
@@ -157,6 +156,7 @@ void add_client()
 		}
 		tmp->next = new;
 	}
+	send_all(connfd);
 }
 
 void rm_client(int fd)
@@ -271,22 +271,22 @@ int main(int ac, char **av) {
 				if (fd  == sockfd)
 				{
 
-					add_client(fd);
+					add_client();
 					break;
 				}
 				int ret_recv = 1;
-				while (ret_recv == 1 && msg[strlen(msg) - 1] != '\n')
+				while (ret_recv == 1  && msg[strlen(msg) - 1] != '\n')
 				{
 					ret_recv = recv(fd, msg + strlen(msg), 1 , 0);
 					if (ret_recv <= 0)
 						break;
 				}
+				extract_message(fd);
 				if(ret_recv <=0)
 				{
 					rm_client(fd);
 					break;
 				}
-				extract_message(fd);
 			}
 		}
 	}
