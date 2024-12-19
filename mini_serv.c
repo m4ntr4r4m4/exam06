@@ -91,26 +91,6 @@ void extract_message(int fd)
 	bzero(&msg, sizeof(msg));
 }
 
-char *str_join(char *buf, char *add)
-{
-	char	*newbuf;
-	int		len;
-
-	if (buf == 0)
-		len = 0;
-	else
-		len = strlen(buf);
-	newbuf = malloc(sizeof(*newbuf) * (len + strlen(add) + 1));
-	if (newbuf == 0)
-		return (0);
-	newbuf[0] = 0;
-	if (buf != 0)
-		strcat(newbuf, buf);
-	free(buf);
-	strcat(newbuf, add);
-	return (newbuf);
-}
-
 int get_max_fd()
 {
 	t_client *tmp = clients;
@@ -199,36 +179,6 @@ void rm_client(int fd)
     close(fd);
 }
 
-//void rm_client(int fd)
-//{
-//	t_client *dele = NULL;
-//	sprintf(buff, "server: client %d just left\n",get_id(fd) );
-//	send_all(fd);
-//	if(clients && clients->fd == fd)
-//	{
-//		dele = clients; 
-//		clients = clients->next;
-//	}
-//	else {
-//		t_client *tmp = clients;
-//		while (tmp)
-//		{
-//			if (tmp->fd == fd)
-//			{
-//				dele = tmp;
-//				tmp = tmp->next;
-//				break;
-//			}
-//			tmp =  tmp->next;
-//		}
-//	}
-//	if (dele)
-//		free(dele);
-//
-//	FD_CLR(fd, &sockets);
-//	close(fd);
-//
-//}
 int main(int ac, char **av) {
 	if (ac != 2)
 	{
